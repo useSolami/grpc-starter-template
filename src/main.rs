@@ -8,6 +8,7 @@ use yellowstone_grpc_proto::geyser::{
 };
 #[tokio::main]
 async fn main() {
+    let _ = dotenvy::dotenv();
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
         .init();
@@ -19,7 +20,7 @@ async fn subscribe_transactions() {
         .install_default()
         .ok();
 
-    let endpoint = env::var("GRPC_ENDPOINT").expect("GRPC_ENDPOINT env var is required");
+    let endpoint = env::var("GRPC_ENDPOINT").unwrap_or("https://grpc-ams.solami.fast".to_string());
     let token = env::var("GRPC_X_TOKEN").expect("GRPC_X_TOKEN env var is required");
 
     info!(%endpoint, "connecting to geyser backend");
